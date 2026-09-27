@@ -1,17 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-void main()
-{
-  runApp(const MainApp());
-}
+import 'app/app.dart';
+import 'di/di.dart';
 
-class MainApp extends StatelessWidget
-{
-  const MainApp({super.key});
+/// Точка входа приложения: инициализирует сервисы, обработчик ошибок и UI.
+Future<void> main() async {
+  // Нужна до вызовов Flutter API до runApp.
+  WidgetsFlutterBinding.ensureInitialized();
 
-  @override
-  Widget build(BuildContext context)
-  {
-    return const MaterialApp(home: Scaffold(body: Center(child: Text('Hello World!'))),);
-  }
+  // Регистрируем общие зависимости, например логгер.
+  await setupLocator();
+
+  // Отправляем необработанные ошибки Flutter в Talker.
+  FlutterError.onError = (details) {
+    talker.handle(details.exception, details.stack);
+  };
+
+  // Запускаем корневой виджет приложения.
+  runApp(const CinemaShelfApp());
 }
