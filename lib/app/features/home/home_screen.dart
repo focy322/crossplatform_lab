@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../extensions/extensions.dart';
 import '../../theme/theme.dart';
@@ -69,7 +70,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ...visibleFilms.map(
                 (film) => Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: ContentCard(film: film),
+                  child: ContentCard(
+                    film: film,
+                    // Индекс берём из полного каталога, даже после поиска.
+                    onTap: () =>
+                        context.push('/home/film/${films.indexOf(film)}'),
+                  ),
                 ),
               ),
           ],
