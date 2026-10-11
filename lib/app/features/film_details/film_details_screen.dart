@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../domain/repositories/film/models/film.dart';
 import '../../extensions/extensions.dart';
 import '../../theme/theme.dart';
-import '../home/models/film.dart';
+import '../../widgets/film_poster.dart';
 
 /// Второй экран с подробной информацией о выбранном фильме.
 class FilmDetailsScreen extends StatelessWidget {
@@ -40,37 +41,9 @@ class FilmDetailsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        // Используем то же локальное изображение, что в списке.
-                        Image.asset(
-                          'assets/images/cinema_poster.png',
-                          semanticLabel: 'Постер фильма «${film.title}»',
-                          fit: BoxFit.cover,
-                          color: film.color.withValues(alpha: 0.38),
-                          colorBlendMode: BlendMode.srcATop,
-                        ),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                film.color.withValues(alpha: 0.82),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Icon(
-                            film.symbol,
-                            color: Colors.white,
-                            size: 72,
-                          ),
-                        ),
-                      ],
+                    child: ColoredBox(
+                      color: ThemeColors.ink,
+                      child: FilmPoster(film: film, fit: BoxFit.contain),
                     ),
                   ),
                 ),
@@ -92,7 +65,7 @@ class FilmDetailsScreen extends StatelessWidget {
                 ),
                 24.ph,
                 Text(
-                  film.fullDescription,
+                  film.description,
                   style: textTheme.bodyLarge?.copyWith(
                     color: ThemeColors.ink,
                     height: 1.6,

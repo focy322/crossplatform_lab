@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../features/home/models/film.dart';
+import '../../domain/repositories/film/models/film.dart';
 import '../theme/theme.dart';
+import 'film_poster.dart';
 
 /// Повторно используемая карточка фильма для списка каталога.
 class ContentCard extends StatelessWidget {
@@ -31,7 +32,7 @@ class ContentCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Левая часть карточки — локальное изображение-постер.
+                // Левая часть карточки — постер из TMDB.
                 _FilmCover(film: film),
                 const SizedBox(width: 14),
                 Expanded(
@@ -95,7 +96,7 @@ class ContentCard extends StatelessWidget {
 class _FilmCover extends StatelessWidget {
   const _FilmCover({required this.film});
 
-  /// Данные, задающие цвет, иконку и год на постере.
+  /// Данные с адресом постера.
   final Film film;
 
   @override
@@ -107,7 +108,7 @@ class _FilmCover extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: film.color.withValues(alpha: 0.28),
+            color: ThemeColors.primary.withValues(alpha: 0.28),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -116,55 +117,7 @@ class _FilmCover extends StatelessWidget {
       // Обрезаем изображение по тем же скруглённым углам, что и контейнер.
       child: ClipRRect(
         borderRadius: BorderRadius.circular(14),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Локальный asset выполняет требование задания об изображении.
-            Image.asset(
-              'assets/images/cinema_poster.png',
-              fit: BoxFit.cover,
-              color: film.color.withValues(alpha: 0.38),
-              colorBlendMode: BlendMode.srcATop,
-            ),
-            // Цветовая заливка делает один постер визуально разным для фильмов.
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    film.color.withValues(alpha: 0.82),
-                  ],
-                ),
-              ),
-            ),
-            // Полупрозрачная иконка создаёт декоративный фон.
-            Positioned(
-              right: -14,
-              top: -10,
-              child: Icon(
-                film.symbol,
-                size: 76,
-                color: Colors.white.withValues(alpha: 0.18),
-              ),
-            ),
-            // Центральная иконка показывает тему фильма.
-            Center(child: Icon(film.symbol, color: Colors.white, size: 34)),
-            Positioned(
-              left: 9,
-              bottom: 8,
-              child: Text(
-                film.year,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 11,
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: FilmPoster(film: film),
       ),
     );
   }

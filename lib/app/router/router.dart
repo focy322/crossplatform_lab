@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../di/di.dart';
+import '../../domain/repositories/film/models/film.dart';
 import '../features/film_details/film_details_screen.dart';
 import '../features/home/home.dart';
 
@@ -22,19 +23,16 @@ final appRouter = GoRouter(
           MaterialPage<void>(key: state.pageKey, child: const HomeScreen()),
       routes: [
         GoRoute(
-          path: 'film/:index',
-          // Некорректный адрес возвращает к каталогу вместо ошибки индекса.
+          path: 'film/:id',
+          // Подробности открываются только для переданного из каталога фильма.
           redirect: (_, state) {
-            final index = int.tryParse(state.pathParameters['index'] ?? '');
-            return index == null || index < 0 || index >= films.length
-                ? '/home'
-                : null;
+            final id = int.tryParse(state.pathParameters['id'] ?? '');
+            final film = state.extra;
+            return film is! Film || film.id != id ? '/home' : null;
           },
           pageBuilder: (_, state) => MaterialPage<void>(
             key: state.pageKey,
-            child: FilmDetailsScreen(
-              film: films[int.parse(state.pathParameters['index']!)],
-            ),
+            child: FilmDetailsScreen(film: state.extra as Film),
           ),
         ),
       ],

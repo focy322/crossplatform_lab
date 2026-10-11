@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Каталог и постеры загружаются из внешнего API. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="crossplatform_lab"
         android:name="${applicationName}"

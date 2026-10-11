@@ -49,3 +49,6 @@ app.*.map.json
 
 # Local Flutter DevTools preferences
 devtools_options.yaml
+
+# Локальный ключ доступа к TMDB.
+/config/tmdb.local.json
