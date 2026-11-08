@@ -113,8 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(bottom: 14),
               child: ContentCard(
                 film: film,
-                // Передаём загруженный фильм без запроса для второго экрана.
-                onTap: () => context.push('/home/film/${film.id}', extra: film),
+                // В адрес передаём только ID выбранного фильма.
+                // Второй экран по этому ID самостоятельно запрашивает данные.
+                onTap: () => context.push('/home/film/${film.id}'),
               ),
             ),
           ),

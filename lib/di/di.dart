@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import '../app/features/film_details/bloc/film_details_bloc.dart';
 import '../app/features/home/bloc/home_bloc.dart';
 import '../data/dio/set_up.dart';
 import '../domain/repositories/film/film_repository.dart';
@@ -15,7 +16,7 @@ final getIt = GetIt.instance;
 /// Общий экземпляр логгера для ошибок и навигации.
 final talker = TalkerFlutter.init();
 
-/// Один HTTP-клиент используется всеми запросами каталога.
+/// Один HTTP-клиент используется запросами каталога и подробностей.
 final dio = Dio();
 
 /// Регистрирует сервисы, доступные из разных частей приложения.
@@ -45,6 +46,17 @@ Future<void> setupLocator() async {
         talker: talker,
       ),
       dispose: (bloc) => bloc.close(),
+    );
+  }
+  if (!getIt.isRegistered<FilmDetailsBloc>()) {
+    // Каждый открытый экран получает свой BLoC, который закроет BlocProvider.
+    // registerFactory создаёт новый экземпляр при вызове getIt<FilmDetailsBloc>().
+    // Репозиторий и HTTP-клиент при этом остаются общими для обоих экранов.
+    getIt.registerFactory<FilmDetailsBloc>(
+      () => FilmDetailsBloc(
+        filmRepository: getIt<FilmRepositoryInterface>(),
+        talker: talker,
+      ),
     );
   }
 }
